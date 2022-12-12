@@ -9,7 +9,6 @@ class Familiar(models.Model):
     numero_pasaporte= models.IntegerField()
     fecha_de_nacimiento= models.DateField()
     
-    
     def __str__(self):
       return f"{self.id}, {self.nombre}, {self.direccion}, {self.numero_pasaporte}, {self.fecha_de_nacimiento}"
     
