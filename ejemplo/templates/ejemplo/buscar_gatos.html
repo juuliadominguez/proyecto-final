@@ -1,0 +1,16 @@
+{% extends 'ejemplo/base_gatos.html' %}
+{% block titulo%} Buscar Gatos por nombre {% endblock %}
+{% block contenido %}
+  
+  <form action="/mis-gatos/buscar" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Buscar">
+  </form>
+
+  {% for gato in lista_gatos %}
+      <ul>
+          <li> Nombre: {{gato.nombre}}, Edad: {{gato.edad}}, Sexo: {{gato.sexo}}</li>
+      </ul>
+  {% endfor %}
+{% endblock %}

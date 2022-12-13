@@ -1,0 +1,15 @@
+{% extends 'ejemplo/base_gatos.html' %}
+{% block titulo%} Alta de nuevo Gato {% endblock %}
+{% block contenido %}
+  
+  <form action="/mis-gatos/alta" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Guardar">
+  </form>
+
+  <h2 style="color:green">{{msg_exito}}</h2>
+
+  <a href="/mis-gatos">Volver a la lista de Gatos</a>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from ejemplo.models import Familiar
-from ejemplo.forms import Buscar, FamiliarForm
+from ejemplo.models import Familiar, Gatos, Perros
+from ejemplo.forms import Buscar, FamiliarForm, GatosForm, PerrosForm
 from django.views import View
 
 def index(request):
@@ -37,9 +37,22 @@ def buscar(request):
 
     return render(request, 'ejemplo/buscar.html', {"resultado": resultado})
 
+
 def mostrar_familiares(request):
   lista_familiares = Familiar.objects.all()
   return render(request, "ejemplo/familiares.html", {"lista_familiares": lista_familiares})
+
+
+def mostrar_gatos(request):
+  lista_gatos = Gatos.objects.all()
+  return render(request, "ejemplo/gatos.html", {"lista_gatos": lista_gatos})
+
+
+def mostrar_perros(request):
+  lista_perros = Perros.objects.all()
+  return render(request, "ejemplo/perros.html", {"lista_perros": lista_perros})
+
+
 
 class BuscarFamiliar(View):
     form_class = Buscar
@@ -58,8 +71,8 @@ class BuscarFamiliar(View):
                                                         'lista_familiares':lista_familiares})
         return render(request, self.template_name, {"form": form})
 
-class AltaFamiliar(View):
 
+class AltaFamiliar(View):
     form_class = FamiliarForm
     template_name = 'ejemplo/alta_familiar.html'
     initial = {"nombre":"", "direccion":"", "numero_pasaporte":""}
@@ -78,6 +91,7 @@ class AltaFamiliar(View):
                                                         'msg_exito': msg_exito})
         
         return render(request, self.template_name, {"form": form})
+
 
 class ActualizarFamiliar(View):
   form_class = FamiliarForm
@@ -111,3 +125,82 @@ class BorrarFamiliar(View):
       familiar.delete()
       familiares= Familiar.objects.all
       return render(request, self.template_name, {'lista_familiares': familiares})
+
+
+
+class BuscarGato(View):
+    form_class = Buscar
+    template_name = 'ejemplo/buscar_gatos.html'
+    initial = {"nombre":""}
+    def get(self, request):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form':form})
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data.get("nombre")
+            lista_gatos = Gatos.objects.filter(nombre__icontains=nombre).all() 
+            form = self.form_class(initial=self.initial)
+            return render(request, self.template_name, {'form':form, 
+                                                        'lista_gatos':lista_gatos})
+        return render(request, self.template_name, {"form": form})
+
+class AltaGatos(View):
+    form_class = GatosForm
+    template_name = 'ejemplo/alta_gatos.html'
+    initial = {"nombre":"", "edad":"", "sexo":""}
+
+    def get(self, request):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            msg_exito = f"se cargo con éxito el gato {form.cleaned_data.get('nombre')}"
+            form = self.form_class(initial=self.initial)
+            return render(request, self.template_name, {'form':form, 
+                                                        'msg_exito': msg_exito})
+        
+        return render(request, self.template_name, {"form": form})
+
+
+class BuscarPerro(View):
+    form_class = Buscar
+    template_name = 'ejemplo/buscar_perros.html'
+    initial = {"nombre":""}
+    def get(self, request):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form':form})
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data.get("nombre")
+            lista_perros = Perros.objects.filter(nombre__icontains=nombre).all() 
+            form = self.form_class(initial=self.initial)
+            return render(request, self.template_name, {'form':form, 
+                                                        'lista_perros':lista_perros})
+        return render(request, self.template_name, {"form": form})
+
+
+class AltaPerros(View):
+    form_class = PerrosForm
+    template_name = 'ejemplo/alta_perros.html'
+    initial = {"nombre":"", "edad":"", "sexo":""}
+
+    def get(self, request):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            msg_exito = f"se cargo con éxito el perro {form.cleaned_data.get('nombre')}"
+            form = self.form_class(initial=self.initial)
+            return render(request, self.template_name, {'form':form, 
+                                                        'msg_exito': msg_exito})
+        
+        return render(request, self.template_name, {"form": form})
+
