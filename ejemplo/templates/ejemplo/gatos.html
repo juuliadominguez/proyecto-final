@@ -1,13 +1,15 @@
 {% extends 'ejemplo/base_gatos.html' %}
 {% block titulo%} Lista de todos mis gatos {% endblock %}
 {% block contenido %}
-<a href="/mi-familia/alta">Nuevo Familiar</a>
-  {% for gato in lista_gatos %}
+<a href="/mis-gatos/buscar">Buscar Gato</a>
+<a href="/mis-gatos/alta">Nuevo Gato</a>
+
+{% for gato in lista_gatos %}
       <ul>
           <li> 
             Nombre: {{gato.nombre}}, Edad: {{gato.edad}}, Sexo: {{gato.sexo}}</li>
-            <a href="/mi-familia/actualizar/{{ familiar.id }}">Actualizar</a>
-            <a href="/mi-familia/borrar/{{ familiar.id }}">Borrar</a>
+            <a href="/mis-gatos/actualizar/{{ gato.id }}">Actualizar</a>
+            <a href="/mis-gatos/borrar/{{ gato.id }}">Borrar</a>
 
           </ul>
   {% endfor %}

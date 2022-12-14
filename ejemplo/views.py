@@ -128,7 +128,7 @@ class BorrarFamiliar(View):
 
 
 
-class BuscarGato(View):
+class BuscarGatos(View):
     form_class = Buscar
     template_name = 'ejemplo/buscar_gatos.html'
     initial = {"nombre":""}
@@ -165,8 +165,40 @@ class AltaGatos(View):
         
         return render(request, self.template_name, {"form": form})
 
+class ActualizarGatos(View):
+  form_class = GatosForm
+  template_name = 'ejemplo/actualizar_gatos.html'
+  initial = {"nombre":"", "edad":"", "sexo":""}
+  
+  def get(self, request, pk): 
+      gatos = get_object_or_404(Gatos, pk=pk)
+      form = self.form_class(instance=gatos)
+      return render(request, self.template_name, {'form':form,'gatos': gatos})
 
-class BuscarPerro(View):
+  def post(self, request, pk): 
+      gatos = get_object_or_404(Gatos, pk=pk)
+      form = self.form_class(request.POST ,instance=gatos)
+      if form.is_valid():
+          form.save()
+          msg_exito = f"se actualizó con éxito el gato {form.cleaned_data.get('nombre')}"
+          form = self.form_class(initial=self.initial)
+          return render(request, self.template_name, {'form':form, 
+                                                      'gatos': gatos,
+                                                      'msg_exito': msg_exito})
+      
+      return render(request, self.template_name, {"form": form})
+
+class BorrarGatos(View):
+  template_name = 'ejemplo/gatos.html'
+  
+  def get(self, request, pk): 
+      gatos = get_object_or_404(Gatos, pk=pk)
+      gatos.delete()
+      gatos= Gatos.objects.all
+      return render(request, self.template_name, {'lista_gatos': gatos})
+
+
+class BuscarPerros(View):
     form_class = Buscar
     template_name = 'ejemplo/buscar_perros.html'
     initial = {"nombre":""}
@@ -203,4 +235,36 @@ class AltaPerros(View):
                                                         'msg_exito': msg_exito})
         
         return render(request, self.template_name, {"form": form})
+
+class ActualizarPerros(View):
+  form_class = PerrosForm
+  template_name = 'ejemplo/actualizar_perros.html'
+  initial = {"nombre":"", "edad":"", "sexo":""}
+  
+  def get(self, request, pk): 
+      perros = get_object_or_404(Perros, pk=pk)
+      form = self.form_class(instance=perros)
+      return render(request, self.template_name, {'form':form,'perros': perros})
+
+  def post(self, request, pk): 
+      perros = get_object_or_404(Perros, pk=pk)
+      form = self.form_class(request.POST ,instance=perros)
+      if form.is_valid():
+          form.save()
+          msg_exito = f"se actualizó con éxito el perro {form.cleaned_data.get('nombre')}"
+          form = self.form_class(initial=self.initial)
+          return render(request, self.template_name, {'form':form, 
+                                                      'perros': perros,
+                                                      'msg_exito': msg_exito})
+      
+      return render(request, self.template_name, {"form": form})
+
+class BorrarPerros(View):
+  template_name = 'ejemplo/perros.html'
+  
+  def get(self, request, pk): 
+      perros = get_object_or_404(Perros, pk=pk)
+      perros.delete()
+      perros= Perros.objects.all
+      return render(request, self.template_name, {'lista_perros': perros})
 

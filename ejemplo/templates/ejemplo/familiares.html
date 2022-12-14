@@ -1,8 +1,10 @@
 {% extends 'ejemplo/base.html' %}
 {% block titulo%} Lista de todos mis Familiares {% endblock %}
 {% block contenido %}
+<a href="/mi-familia/buscar">Buscar Familiar</a>
 <a href="/mi-familia/alta">Nuevo Familiar</a>
-  {% for familiar in lista_familiares %}
+
+{% for familiar in lista_familiares %}
       <ul>
           <li> 
             Nombre: {{familiar.nombre}}, Dirección: {{familiar.direccion}}, Pasaporte: {{familiar.numero_pasaporte}}, Fecha de nacimiento: {{familiar.fecha_de_nacimiento}}</li>
