@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from ejemplo.models import Familiar
 from ejemplo.forms import Buscar, FamiliarForm
 from django.views import View
+from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
 
 def index(request):
     return render(request, "ejemplo/saludar.html")
@@ -111,3 +112,21 @@ class BorrarFamiliar(View):
       familiar.delete()
       familiares= Familiar.objects.all
       return render(request, self.template_name, {'lista_familiares': familiares})
+
+
+class FamiliarList(ListView):
+  model = Familiar
+
+class FamiliarCrear(CreateView):
+  model = Familiar
+  success_url = "/panel-familia"
+  fields = ["nombre", "direccion", "numero_pasaporte", "fecha_de_nacimiento"]
+
+class FamiliarBorrar(DeleteView):
+    model = Familiar
+    success_url = "/panel-familia"
+
+class FamiliarActualizar(UpdateView):
+    model= Familiar
+    success_url= "/success_update_message"
+    fields= ["nombre", "direccion", "numero_pasaporte", "fecha_de_nacimiento"]
